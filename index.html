@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Radio en Vivo</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(to right, #1f1c2c, #928dab);
+      color: white;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 2rem;
+    }
+
+    h1 {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+    }
+
+    .cover {
+      border-radius: 50%;
+      border: 6px solid white;
+      width: 200px;
+      height: 200px;
+      object-fit: cover;
+      box-shadow: 0 0 20px rgba(0,0,0,0.5);
+      animation: pulse 6s infinite ease-in-out;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+
+    .song {
+      margin: 1.5rem 0;
+      font-size: 1.2rem;
+      animation: fadeIn 1s ease-out;
+    }
+
+    .listeners {
+      font-size: 0.9rem;
+      margin-top: 0.5rem;
+      color: #ddd;
+    }
+
+    audio {
+      margin-top: 2rem;
+      width: 90%;
+      max-width: 400px;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+  <h1 id="station-name">Cargando estación...</h1>
+  <img id="cover-art" class="cover" src="" alt="Carátula"/>
+  <div class="song" id="song-info">Cargando canción...</div>
+  <div class="listeners" id="listeners-count">0 oyentes</div>
+  <audio id="player" controls autoplay></audio>
+
+  <script>
+    const AZURACAST_URL = "http://YOUR_AZURACAST_URL"; // ← Cambia esto
+    const STATION = "station-short-name";              // ← Cambia esto también
+
+    async function cargarDatos() {
+      try {
+        const response = await fetch(`${AZURACAST_URL}/api/nowplaying/${STATION}`);
+        const data = await response.json();
+
+        document.getElementById("station-name").innerText = data.station.name;
+        document.getElementById("cover-art").src = data.now_playing.song.art;
+        document.getElementById("song-info").innerText =
+          `${data.now_playing.song.artist} - ${data.now_playing.song.title}`;
+        document.getElementById("player").src = data.station.listen_url;
+        document.getElementById("listeners-count").innerText =
+          `${data.listeners.current} oyentes`;
+      } catch (err) {
+        console.error("Error al cargar datos de AzuraCast:", err);
+      }
+    }
+
+    cargarDatos();
+    setInterval(cargarDatos, 15000);
+  </script>
+</body>
+</html>
