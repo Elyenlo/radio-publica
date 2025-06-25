@@ -1,97 +1,249 @@
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Radio Bethel Huimanguillo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Radio Bethel MX</title>
   <style>
     body {
       margin: 0;
+      padding: 0;
       font-family: 'Segoe UI', sans-serif;
-      background: linear-gradient(to right, #1f1c2c, #928dab);
+      
+background: linear-gradient(-45deg, #111, #1a1a1a, #222, #111);
+background-size: 400% 400%;
+animation: gradientBG 15s ease infinite;
+
       color: white;
       text-align: center;
+    }
+    .whatsapp-float {
+      position: fixed;
+      bottom: 20px;
+      left: 20px;
+      background-color: #25D366;
+      border-radius: 50%;
+      width: 60px;
+      height: 60px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+      z-index: 1000;
+    }
+    .whatsapp-float img {
+      width: 32px;
+      height: 32px;
+      filter: invert(1);
+    }
+    .social-menu-toggle {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      z-index: 1000;
       display: flex;
       flex-direction: column;
-      align-items: center;
-      padding: 2rem;
+      align-items: flex-end;
     }
-
-    h1 {
-      font-size: 2rem;
-      margin-bottom: 1rem;
-    }
-
-    .cover {
+    .social-toggle-btn {
+      background: #444;
+      border: none;
       border-radius: 50%;
-      border: 6px solid white;
-      width: 200px;
-      height: 200px;
-      object-fit: cover;
-      box-shadow: 0 0 20px rgba(0,0,0,0.5);
-      animation: pulse 6s infinite ease-in-out;
+      width: 60px;
+      height: 60px;
+      cursor: pointer;
+    }
+    .social-toggle-btn img {
+      width: 28px;
+      height: 28px;
+      filter: invert(1);
+    }
+    .social-menu {
+      display: none;
+      flex-direction: column;
+      margin-bottom: 10px;
+    }
+    .social-menu a {
+      background: #222;
+      color: white;
+      text-decoration: none;
+      padding: 10px;
+      border-radius: 8px;
+      margin: 5px 0;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .social-menu a img {
+      width: 20px;
+      height: 20px;
+      filter: invert(1);
+    }
+    #radio-player {
+      padding-top: 40px;
+    }
+    @media (max-width: 600px) {
+      .social-menu a {
+        font-size: 14px;
+        padding: 8px;
+      }
+      .social-toggle-btn, .whatsapp-float {
+        width: 50px;
+        height: 50px;
+      }
+      .social-toggle-btn img, .whatsapp-float img {
+        width: 24px;
+        height: 24px;
+      }
+    }
+  
+    /* Animaciones suaves */
+    #radio-player, .social-menu a, .whatsapp-float, .social-toggle-btn {
+      transition: all 0.3s ease-in-out;
+    }
+    #radio-player {
+      opacity: 0;
+      transform: translateY(20px);
+      animation: fadeInUp 1s ease forwards;
+      animation-delay: 0.3s;
+    }
+    @keyframes fadeInUp {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    .social-menu a:hover {
+      background: #333;
+      transform: scale(1.05);
+    }
+    .whatsapp-float:hover, .social-toggle-btn:hover {
+      transform: scale(1.1);
     }
 
-    @keyframes pulse {
-      0%, 100% { transform: scale(1); }
-      50% { transform: scale(1.05); }
-    }
-
-    .song {
-      margin: 1.5rem 0;
-      font-size: 1.2rem;
-      animation: fadeIn 1s ease-out;
-    }
-
-    .listeners {
-      font-size: 0.9rem;
-      margin-top: 0.5rem;
-      color: #ddd;
-    }
-
-    audio {
-      margin-top: 2rem;
-      width: 90%;
-      max-width: 400px;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-  </style>
+@keyframes gradientBG {
+  0% {background-position: 0% 50%;}
+  50% {background-position: 100% 50%;}
+  100% {background-position: 0% 50%;}
+}
+</style>
 </head>
 <body>
-  <h1 id="station-name">Cargando Radio Bethel Huimanguillo...</h1>
-  <img id="cover-art" class="cover" src="" alt="Carátula"/>
-  <div class="song" id="song-info">Cargando canción...</div>
-  <div class="listeners" id="listeners-count">0 oyentes</div>
-  <audio id="player" controls autoplay></audio>
+  <div id="radio-player">
+    <div id="waveform" style="width: 90%; max-width: 500px; margin: 0 auto 15px auto;"></div>
+    <img id="song-art" src="" alt="Carátula" style="width: 150px; height: 150px; border-radius: 10px; object-fit: cover; display: none; margin-bottom: 10px;" />
+    <div id="song-info">
+      <div id="song-title" style="font-size: 18px; font-weight: bold;"></div>
+      <div id="song-artist" style="font-size: 16px;"></div>
+    </div>
+    <button id="playPauseBtn" style="padding: 12px 20px; font-size: 16px; border: none; border-radius: 8px; background: #25D366; color: white; cursor: pointer;">
+      ▶️ Escuchar en Vivo
+    </button>
+  </div>
 
+  <a href="https://walink.co/2e67fd" class="whatsapp-float" target="_blank" title="WhatsApp">
+    <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/whatsapp.svg" alt="WhatsApp" />
+  </a>
+
+  <div class="social-menu-toggle">
+    <div class="social-menu" id="socialMenu">
+      <a href="https://www.facebook.com/radiobethelmx/" target="_blank">
+        <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/facebook.svg" /> Facebook
+      </a>
+      <a href="https://www.instagram.com/bethelradiomx/" target="_blank">
+        <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/instagram.svg" /> Instagram
+      </a>
+      <a href="https://www.youtube.com/@BethelRadioMX" target="_blank">
+        <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/youtube.svg" /> YouTube
+      </a>
+      <a href="https://www.tiktok.com/@bethelradiomx" target="_blank">
+        <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/tiktok.svg" /> TikTok
+      </a>
+    </div>
+    <button class="social-toggle-btn" id="socialToggle">
+      <img src="https://cdn-icons-png.flaticon.com/512/1828/1828859.png" alt="Menu" />
+    </button>
+  </div>
+
+  <script src="https://unpkg.com/wavesurfer.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.3/howler.min.js"></script>
   <script>
-    const AZURACAST_URL = "http://192.168.0.101";
-    const STATION = "bethel_radio_huimanguillo";
+    const streamUrl = "https://tudominio.duckdns.org/radio.mp3";
+    const apiUrl = "https://tudominio.duckdns.org/api/nowplaying/1";
 
-    async function cargarDatos() {
+    const playBtn = document.getElementById('playPauseBtn');
+    const songTitle = document.getElementById('song-title');
+    const songArtist = document.getElementById('song-artist');
+    const songArt = document.getElementById('song-art');
+
+    let isPlaying = false;
+
+    const sound = new Howl({
+      src: [streamUrl],
+      html5: true,
+      format: ['mp3'],
+      volume: 1.0,
+      onplay: () => wavesurfer.play(),
+      onpause: () => wavesurfer.pause()
+    });
+
+    const wavesurfer = WaveSurfer.create({
+      container: '#waveform',
+      waveColor: '#777',
+      progressColor: '#25D366',
+      interact: false,
+      cursorWidth: 0,
+      height: 80,
+      responsive: true,
+      hideScrollbar: true
+    });
+
+    wavesurfer.load(streamUrl);
+
+    playBtn.addEventListener('click', () => {
+      if (!isPlaying) {
+        sound.play();
+        playBtn.textContent = '⏸️ Pausar';
+        isPlaying = true;
+      } else {
+        sound.pause();
+        playBtn.textContent = '▶️ Escuchar en Vivo';
+        isPlaying = false;
+      }
+    });
+
+    async function updateSongInfo() {
       try {
-        const response = await fetch(`${AZURACAST_URL}/api/nowplaying/${STATION}`);
+        const response = await fetch(apiUrl);
         const data = await response.json();
+        const title = data.now_playing.song.title || 'Título desconocido';
+        const artist = data.now_playing.song.artist || 'Artista desconocido';
+        const art = data.now_playing.song.art;
 
-        document.getElementById("station-name").innerText = data.station.name;
-        document.getElementById("cover-art").src = data.now_playing.song.art;
-        document.getElementById("song-info").innerText =
-          `${data.now_playing.song.artist} - ${data.now_playing.song.title}`;
-        document.getElementById("player").src = data.station.listen_url;
-        document.getElementById("listeners-count").innerText =
-          `${data.listeners.current} oyentes`;
-      } catch (err) {
-        console.error("Error al cargar datos de AzuraCast:", err);
-        document.getElementById("song-info").innerText = "No se pudo cargar la canción.";
+        songTitle.textContent = title;
+        songArtist.textContent = artist;
+
+        if (art) {
+          songArt.src = art;
+          songArt.style.display = 'block';
+        } else {
+          songArt.style.display = 'none';
+        }
+      } catch (e) {
+        songTitle.textContent = "No se pudo obtener la canción";
+        songArtist.textContent = "";
+        songArt.style.display = 'none';
       }
     }
 
-    cargarDatos();
-    setInterval(cargarDatos, 15000);
+    updateSongInfo();
+    setInterval(updateSongInfo, 5000);
+
+    document.getElementById('socialToggle').addEventListener('click', () => {
+      const menu = document.getElementById('socialMenu');
+      menu.style.display = menu.style.display === 'flex' ? 'none' : 'flex';
+    });
   </script>
 </body>
 </html>
